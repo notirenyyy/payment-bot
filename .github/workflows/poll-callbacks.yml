@@ -1,0 +1,42 @@
+name: Poll Payment Callbacks
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'  # Every 5 minutes
+  workflow_dispatch:        # Allow manual trigger from GitHub UI
+
+# Prevent two runs overlapping and causing git conflicts
+concurrency:
+  group: poll-callbacks
+  cancel-in-progress: false
+
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Poll callbacks + check nudge
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+          USERNAMES: ${{ secrets.USERNAMES }}
+          AMOUNT_PER_PERSON: ${{ secrets.AMOUNT_PER_PERSON }}
+          AMOUNT_TOTAL: ${{ secrets.AMOUNT_TOTAL }}
+          LEDGER_PATH: ledger.json
+        run: python3 poll_callbacks.py
+
+      - name: Save ledger to repo
+        run: |
+          git config user.name "payment-bot"
+          git config user.email "bot@github-actions"
+          git add ledger.json ledger.md
+          git diff --staged --quiet || git commit -m "chore: update ledger [skip ci]"
+          git push

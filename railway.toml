@@ -1,0 +1,12 @@
+[build]
+builder = "nixpacks"
+
+[deploy]
+startCommand = "python3 bot_daemon.py"
+restartPolicyType = "always"
+
+# Weekly reminder — Sunday 12pm Singapore time (UTC+8) = Sunday 4am UTC
+[[cronJobs]]
+name = "weekly-reminder"
+schedule = "0 4 * * 0"
+command = "python3 send_reminder.py"
