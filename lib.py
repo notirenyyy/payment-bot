@@ -102,7 +102,9 @@ def tg_call(token: str, method: str, params: dict) -> dict:
         url, data=data, headers={"Content-Type": "application/json"}, method="POST"
     )
     try:
-        with urllib.request.urlopen(req, timeout=20) as resp:
+        # HTTP timeout must exceed the longest Telegram long-poll timeout
+        # (POLL_TIMEOUT in bot_daemon.py is 30s, so 40s gives a 10s buffer).
+        with urllib.request.urlopen(req, timeout=40) as resp:
             return json.loads(resp.read().decode())
     except urllib.error.HTTPError as e:
         # Read Telegram's JSON error body so we can surface the real description.
