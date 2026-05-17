@@ -174,8 +174,16 @@
     {
       "date": "2026-05-10",
       "message_id": 3,
-      "paid": [],
-      "sent_at": "2026-05-09T11:00:00+00:00",
+      "paid": ["@limmxy", "@notirenyyy", "@mienions_ra", "@ilyisabel"],
+      "sent_at": "2026-05-10T04:00:00+00:00",
+      "nudge_sent": false,
+      "summary_sent": true
+    },
+    {
+      "date": "2026-05-17",
+      "message_id": null,
+      "paid": ["@notirenyyy"],
+      "sent_at": "2026-05-17T04:00:00+00:00",
       "nudge_sent": false,
       "summary_sent": false
     },
