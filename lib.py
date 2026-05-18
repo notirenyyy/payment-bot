@@ -164,6 +164,50 @@ def all_paid_message(week: dict, cfg: dict) -> str:
     return "\n".join(lines)
 
 
+def ledger_summary_message(ledger: dict, cfg: dict) -> str:
+    """Compact running-ledger view posted to the group after each all-paid event.
+
+    Shows the most recent weeks in detail, plus a count of older full weeks
+    and the running total collected to date.
+    """
+    everyone = set(cfg["usernames"])
+    total = cfg.get("amount_total", "")
+
+    weeks_sorted = sorted(ledger["weeks"], key=lambda w: w["date"])
+    full_weeks = [w for w in weeks_sorted if everyone.issubset(set(w["paid"]))]
+
+    # Running total — best effort: parse amount_total like "$40" into a number.
+    try:
+        per_week_value = float(total.replace("$", "").replace(",", "").strip())
+        running_total = f"${int(per_week_value * len(full_weeks))}"
+    except (ValueError, AttributeError):
+        running_total = f"{len(full_weeks)} × {total}".strip()
+
+    lines = ["📒 Ledger update", ""]
+
+    recent = weeks_sorted[-5:]
+    for w in recent:
+        paid_set = set(w["paid"])
+        date_str = pretty_date(w["date"])
+        if everyone.issubset(paid_set):
+            lines.append(f"✅ {date_str} — paid in full")
+        elif paid_set:
+            missing = [h for h in cfg["usernames"] if h not in paid_set]
+            lines.append(f"⚠️ {date_str} — waiting on {', '.join(missing)}")
+        else:
+            lines.append(f"⏳ {date_str} — no payments yet")
+
+    older_full = sum(
+        1 for w in weeks_sorted[:-5] if everyone.issubset(set(w["paid"]))
+    )
+    if older_full:
+        lines.append(f"…plus {older_full} earlier weeks ✅")
+
+    lines.append("")
+    lines.append(f"💰 Running total: {running_total} ({len(full_weeks)} full weeks)")
+    return "\n".join(lines)
+
+
 def nudge_message(week: dict, cfg: dict) -> str:
     """24-hour nudge tagging anyone who hasn't paid yet."""
     unpaid = [h for h in cfg["usernames"] if h not in week["paid"]]

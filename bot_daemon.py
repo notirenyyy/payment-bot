@@ -20,6 +20,7 @@ from lib import (
     all_paid,
     all_paid_message,
     get_or_create_week,
+    ledger_summary_message,
     load_config,
     load_ledger,
     mark_paid,
@@ -38,7 +39,9 @@ NUDGE_HOURS   = 24   # hours after reminder before sending nudge
 CHECK_INTERVAL = 60  # seconds between nudge/summary checks
 
 
-def send_all_paid_summary(week: dict, cfg: dict, token: str, chat_id: str) -> None:
+def send_all_paid_summary(
+    week: dict, cfg: dict, ledger: dict, token: str, chat_id: str
+) -> None:
     msg = all_paid_message(week, cfg)
     result = tg_call(token, "sendMessage", {
         "chat_id": chat_id,
@@ -49,6 +52,19 @@ def send_all_paid_summary(week: dict, cfg: dict, token: str, chat_id: str) -> No
         print("🎉 Everyone paid! Summary sent to group.")
     else:
         print(f"⚠️  Could not send summary: {result.get('description')}")
+        return
+
+    # Post the running ledger right after the celebration so the group always
+    # sees the up-to-date weekly history in chat.
+    ledger_msg = ledger_summary_message(ledger, cfg)
+    ledger_result = tg_call(token, "sendMessage", {
+        "chat_id": chat_id,
+        "text": ledger_msg,
+    })
+    if ledger_result.get("ok"):
+        print("📒 Ledger summary sent.")
+    else:
+        print(f"⚠️  Could not send ledger summary: {ledger_result.get('description')}")
 
 
 def send_nudge(week: dict, cfg: dict, token: str, chat_id: str) -> None:
@@ -73,7 +89,7 @@ def check_scheduled_actions(cfg: dict, ledger: dict, token: str, chat_id: str) -
 
     # --- All-paid summary (step 3) ---
     if all_paid(week, cfg) and not week.get("summary_sent"):
-        send_all_paid_summary(week, cfg, token, chat_id)
+        send_all_paid_summary(week, cfg, ledger, token, chat_id)
         dirty = True
 
     # --- 24h nudge (step 4) ---
@@ -139,7 +155,7 @@ def process_callback(cb: dict, cfg: dict, ledger: dict, token: str, chat_id: str
 
     # Immediately check if everyone just paid → send summary
     if all_paid(week, cfg) and not week.get("summary_sent"):
-        send_all_paid_summary(week, cfg, token, chat_id)
+        send_all_paid_summary(week, cfg, ledger, token, chat_id)
 
     return True
 

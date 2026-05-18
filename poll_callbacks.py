@@ -15,6 +15,7 @@ from lib import (
     all_paid,
     all_paid_message,
     get_or_create_week,
+    ledger_summary_message,
     load_config,
     load_ledger,
     mark_paid,
@@ -109,6 +110,15 @@ def main() -> None:
             week["summary_sent"] = True
             print("🎉 Everyone paid! Summary sent.")
             dirty = True
+
+            # Follow up with the running ledger so the group history is always
+            # visible in chat.
+            ledger_msg = ledger_summary_message(ledger, cfg)
+            led_res = tg_call(token, "sendMessage", {"chat_id": chat_id, "text": ledger_msg})
+            if led_res.get("ok"):
+                print("📒 Ledger summary sent.")
+            else:
+                print(f"⚠️  Ledger summary failed: {led_res.get('description')}")
         else:
             print(f"⚠️  Summary failed: {res.get('description')}")
 

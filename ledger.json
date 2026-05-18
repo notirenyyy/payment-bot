@@ -181,21 +181,16 @@
     },
     {
       "date": "2026-05-17",
-      "message_id": null,
-      "paid": ["@notirenyyy"],
-      "sent_at": "2026-05-17T04:00:00+00:00",
-      "nudge_sent": false,
-      "summary_sent": false
-    },
-    {
-      "date": "2026-05-17",
       "message_id": 5,
       "paid": [
-        "@notirenyyy"
+        "@limmxy",
+        "@notirenyyy",
+        "@mienions_ra",
+        "@ilyisabel"
       ],
-      "sent_at": "2026-05-17T13:57:27.541442+00:00",
+      "sent_at": "2026-05-17T04:00:00+00:00",
       "nudge_sent": false,
-      "summary_sent": false
+      "summary_sent": true
     }
   ]
 }
