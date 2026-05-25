@@ -140,7 +140,12 @@
     {
       "date": "2026-05-10",
       "message_id": 3,
-      "paid": ["@limmxy", "@notirenyyy", "@mienions_ra", "@ilyisabel"],
+      "paid": [
+        "@limmxy",
+        "@notirenyyy",
+        "@mienions_ra",
+        "@ilyisabel"
+      ],
       "sent_at": "2026-05-10T04:00:00+00:00",
       "nudge_sent": false,
       "summary_sent": true
