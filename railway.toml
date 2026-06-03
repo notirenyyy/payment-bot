@@ -1,12 +1,6 @@
 [build]
 builder = "nixpacks"
 
-[deploy]
-startCommand = "python3 bot_daemon.py"
-restartPolicyType = "always"
-
-# Weekly reminder — Sunday 12pm Singapore time (UTC+8) = Sunday 4am UTC
-[[cronJobs]]
-name = "weekly-reminder"
-schedule = "0 4 * * 0"
-command = "python3 send_reminder.py"
+# Bot is now fully managed by GitHub Actions (poll-callbacks every 5 min,
+# weekly-reminder Sunday 4am UTC). Railway is no longer used — you can
+# pause or delete this service to stop incurring costs.

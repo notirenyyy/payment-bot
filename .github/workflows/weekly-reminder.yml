@@ -34,4 +34,5 @@ jobs:
           git config user.email "bot@github-actions"
           git add ledger.json ledger.md
           git diff --staged --quiet || git commit -m "chore: reminder sent [skip ci]"
+          git pull --rebase origin main
           git push
