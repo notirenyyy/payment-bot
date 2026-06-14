@@ -12,9 +12,12 @@ Run while the reminder is active (Sunday → Monday):
 
 Press Ctrl-C to stop.
 """
+import os
 import sys
+import threading
 import time
 from datetime import datetime, timedelta, timezone
+from http.server import BaseHTTPRequestHandler, HTTPServer
 
 from lib import (
     all_paid,
@@ -34,6 +37,19 @@ from lib import (
 )
 
 POLL_TIMEOUT  = 30   # seconds Telegram holds the connection open
+
+# ── Health-check server (keeps Render free tier alive) ────────────────────────
+class _Health(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(b"ok")
+    def log_message(self, *_): pass  # silence request logs
+
+def _start_health_server():
+    port = int(os.environ.get("PORT", 8080))
+    HTTPServer(("0.0.0.0", port), _Health).serve_forever()
+# ─────────────────────────────────────────────────────────────────────────────
 RETRY_DELAY   = 5    # seconds to wait after a network error
 NUDGE_HOURS   = 24   # hours after reminder before sending nudge
 CHECK_INTERVAL = 60  # seconds between nudge/summary checks
@@ -174,6 +190,7 @@ def main() -> None:
     if offset:
         offset += 1
 
+    threading.Thread(target=_start_health_server, daemon=True).start()
     print("🤖 Payment bot running — Ctrl-C to stop.\n")
     print("  Listening for payments and monitoring 24h nudge…\n")
 
