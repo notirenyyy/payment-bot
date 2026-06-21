@@ -26,5 +26,6 @@ Weekly amount: **$10 each** ($40 total)
 | 24 May 2026 | ✅ Full ($40) | @limmxy, @notirenyyy, @mienions_ra, @ilyisabel |
 | 31 May 2026 | ⚠️ Partial (3/4) | @notirenyyy, @mienions_ra, @ilyisabel |
 | 14 Jun 2026 | ⏳ Pending | — |
+| 21 Jun 2026 | ⏳ Pending | — |
 
-_Last updated: 2026-06-15 13:24_
+_Last updated: 2026-06-21 03:20_
