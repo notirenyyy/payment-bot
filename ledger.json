@@ -286,7 +286,7 @@
       "message_id": 62,
       "paid": [],
       "sent_at": "2026-06-21T08:37:44.232220+00:00",
-      "nudge_sent": false,
+      "nudge_sent": true,
       "summary_sent": false
     }
   ]
