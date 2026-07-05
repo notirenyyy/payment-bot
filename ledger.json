@@ -296,6 +296,14 @@
       "sent_at": "2026-06-28T07:54:05.405309+00:00",
       "nudge_sent": true,
       "summary_sent": false
+    },
+    {
+      "date": "2026-07-05",
+      "message_id": 71,
+      "paid": [],
+      "sent_at": "2026-07-05T07:32:45.812883+00:00",
+      "nudge_sent": false,
+      "summary_sent": false
     }
   ]
 }
