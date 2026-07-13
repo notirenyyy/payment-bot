@@ -265,53 +265,92 @@
       "date": "2026-05-31",
       "message_id": 24,
       "paid": [
+        "@limmxy",
         "@notirenyyy",
         "@mienions_ra",
         "@ilyisabel"
       ],
       "sent_at": "2026-05-31T07:49:00+00:00",
       "nudge_sent": true,
-      "summary_sent": false
+      "summary_sent": true
+    },
+    {
+      "date": "2026-06-07",
+      "message_id": null,
+      "paid": [
+        "@limmxy",
+        "@notirenyyy",
+        "@mienions_ra",
+        "@ilyisabel"
+      ],
+      "sent_at": "2026-06-07T04:00:00+00:00",
+      "nudge_sent": false,
+      "summary_sent": true
     },
     {
       "date": "2026-06-14",
       "message_id": 53,
-      "paid": [],
+      "paid": [
+        "@limmxy",
+        "@notirenyyy",
+        "@mienions_ra",
+        "@ilyisabel"
+      ],
       "sent_at": "2026-06-14T08:18:13.157060+00:00",
-      "nudge_sent": true,
-      "summary_sent": false
+      "nudge_sent": false,
+      "summary_sent": true
     },
     {
       "date": "2026-06-21",
       "message_id": 62,
-      "paid": [],
+      "paid": [
+        "@limmxy",
+        "@notirenyyy",
+        "@mienions_ra",
+        "@ilyisabel"
+      ],
       "sent_at": "2026-06-21T08:37:44.232220+00:00",
-      "nudge_sent": true,
-      "summary_sent": false
+      "nudge_sent": false,
+      "summary_sent": true
     },
     {
       "date": "2026-06-28",
       "message_id": 66,
-      "paid": [],
+      "paid": [
+        "@limmxy",
+        "@notirenyyy",
+        "@mienions_ra",
+        "@ilyisabel"
+      ],
       "sent_at": "2026-06-28T07:54:05.405309+00:00",
-      "nudge_sent": true,
-      "summary_sent": false
+      "nudge_sent": false,
+      "summary_sent": true
     },
     {
       "date": "2026-07-05",
       "message_id": 71,
-      "paid": [],
+      "paid": [
+        "@limmxy",
+        "@notirenyyy",
+        "@mienions_ra",
+        "@ilyisabel"
+      ],
       "sent_at": "2026-07-05T07:32:45.812883+00:00",
-      "nudge_sent": true,
-      "summary_sent": false
+      "nudge_sent": false,
+      "summary_sent": true
     },
     {
       "date": "2026-07-12",
       "message_id": 74,
-      "paid": [],
+      "paid": [
+        "@limmxy",
+        "@notirenyyy",
+        "@mienions_ra",
+        "@ilyisabel"
+      ],
       "sent_at": "2026-07-12T06:39:16.218462+00:00",
-      "nudge_sent": true,
-      "summary_sent": false
+      "nudge_sent": false,
+      "summary_sent": true
     }
   ]
 }
