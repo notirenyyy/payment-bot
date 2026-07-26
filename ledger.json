@@ -1,5 +1,5 @@
 {
-  "last_update_id": 141111141,
+  "last_update_id": 141111243,
   "weeks": [
     {
       "date": "2026-01-11",
@@ -363,7 +363,10 @@
     {
       "date": "2026-07-26",
       "message_id": 85,
-      "paid": [],
+      "paid": [
+        "@ilyisabel",
+        "@notirenyyy"
+      ],
       "sent_at": "2026-07-26T06:41:12.393391+00:00",
       "nudge_sent": false,
       "summary_sent": false
