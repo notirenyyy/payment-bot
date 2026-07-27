@@ -368,7 +368,7 @@
         "@notirenyyy"
       ],
       "sent_at": "2026-07-26T06:41:12.393391+00:00",
-      "nudge_sent": false,
+      "nudge_sent": true,
       "summary_sent": false
     }
   ]
