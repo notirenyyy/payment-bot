@@ -400,7 +400,7 @@
       "message_id": 99,
       "paid": [],
       "sent_at": "2026-08-23T04:42:21.785020+00:00",
-      "nudge_sent": false,
+      "nudge_sent": true,
       "summary_sent": false
     }
   ]
