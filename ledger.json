@@ -432,7 +432,7 @@
       "message_id": 119,
       "paid": [],
       "sent_at": "2026-09-20T09:11:06.064963+00:00",
-      "nudge_sent": false,
+      "nudge_sent": true,
       "summary_sent": false
     }
   ]
