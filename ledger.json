@@ -440,7 +440,7 @@
       "message_id": 123,
       "paid": [],
       "sent_at": "2026-09-27T09:55:07.119363+00:00",
-      "nudge_sent": false,
+      "nudge_sent": true,
       "summary_sent": false
     }
   ]
