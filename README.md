@@ -96,6 +96,9 @@ The ledger starts from **11 Jan 2026** with 19 weeks pre-loaded, including 29 Ma
 
 ## Troubleshooting
 
+- *Taps show a toast but the message never updates / `last_update_id` in `ledger.json` never changes* — something else is reading the bot's updates before GitHub Actions does. Telegram hands each update to whoever asks first. Turn off any old copy of the bot: the Cowork scheduled tasks (`payment-callback-poller`, `weekly-payment-reminder`, `payment-24h-nag`), any Railway/Render service running `bot_daemon.py`, or a laptop running it. Surest fix: in @BotFather, `/revoke` the token, then paste the new one into the GitHub secret `BOT_TOKEN` — every old copy stops instantly.
+- *Sunday reminder late or missing* — GitHub's scheduler is best-effort. The 5-minute poller now sends the reminder itself if it hasn't gone out by Sunday 12:00 SGT, so worst case it's a few minutes late.
+
 - *"chat not found"* — bot isn't in the group, or `chat_id` is wrong (must include the leading minus sign for groups).
 - *"Forbidden: bot was kicked"* — re-add the bot.
 - *"bot_token is not set"* — you haven't pasted your token into `config.json` yet.

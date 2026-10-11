@@ -2,12 +2,15 @@ name: Poll Payment Callbacks
 
 on:
   schedule:
-    - cron: '*/5 * * * *'  # Every 5 minutes
+    # GitHub treats this as "best effort" — in practice runs land every
+    # 5-20 min. This job also sends the Sunday reminder as a catch-up if the
+    # weekly workflow below is late or skipped.
+    - cron: '*/5 * * * *'
   workflow_dispatch:        # Allow manual trigger from GitHub UI
 
-# Prevent two runs overlapping and causing git conflicts
+# Shared with weekly-reminder.yml so the two never race on ledger.json
 concurrency:
-  group: poll-callbacks
+  group: payment-bot
   cancel-in-progress: false
 
 jobs:

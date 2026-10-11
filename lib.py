@@ -3,7 +3,7 @@ import json
 import os
 import urllib.parse
 import urllib.request
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 BASE_DIR = Path(__file__).parent
@@ -14,6 +14,11 @@ LEDGER_PATH    = Path(os.environ.get("LEDGER_PATH",    str(BASE_DIR / "ledger.js
 LEDGER_MD_PATH = Path(os.environ.get("LEDGER_MD_PATH", str(BASE_DIR / "ledger.md")))
 
 TELEGRAM_API = "https://api.telegram.org/bot{token}/{method}"
+
+# Everything is scheduled in Singapore time. GitHub runners are on UTC, so
+# never use a naive datetime.now() for date logic.
+SGT = timezone(timedelta(hours=8))
+REMINDER_HOUR_SGT = 12
 
 
 # --- IO ---
@@ -49,9 +54,13 @@ def save_ledger(ledger: dict) -> None:
 
 # --- Date helpers ---
 
+def now_sgt() -> datetime:
+    return datetime.now(SGT)
+
+
 def this_sunday() -> str:
-    """Return the ISO date of the most recent Sunday (today if it's Sunday)."""
-    today = datetime.now().date()
+    """Return the ISO date of the most recent Sunday in SGT (today if it's Sunday)."""
+    today = now_sgt().date()
     # Python: Monday = 0, Sunday = 6.
     offset = (today.weekday() + 1) % 7
     return (today - timedelta(days=offset)).isoformat()
@@ -245,9 +254,41 @@ def render_ledger_md(ledger: dict, cfg: dict) -> str:
         paid_str = ", ".join(w["paid"]) if w["paid"] else "—"
         out.append(f"| {pretty_date(w['date'])} | {status} | {paid_str} |")
     out.append("")
-    out.append(f"_Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M')}_")
+    out.append(f"_Last updated: {now_sgt().strftime('%Y-%m-%d %H:%M')} SGT_")
     return "\n".join(out) + "\n"
 
 
 def write_ledger_md(ledger: dict, cfg: dict) -> None:
     LEDGER_MD_PATH.write_text(render_ledger_md(ledger, cfg))
+
+
+# --- Reminder sending (shared by send_reminder.py and poll_callbacks.py) ---
+
+def reminder_due(week: dict, now: datetime | None = None) -> bool:
+    """True if this week's reminder hasn't gone out and it's past Sunday 12:00 SGT.
+
+    Only catches up within 48h of the scheduled time, so a long outage
+    doesn't fire a stale reminder late in the week.
+    """
+    if week.get("message_id"):
+        return False
+    now = now or now_sgt()
+    due_at = datetime.fromisoformat(week["date"]).replace(
+        hour=REMINDER_HOUR_SGT, tzinfo=SGT
+    )
+    return due_at <= now < due_at + timedelta(hours=48)
+
+
+def send_week_reminder(week: dict, cfg: dict, token: str, chat_id: str) -> dict:
+    """Post the reminder for `week` and record message_id/sent_at. Returns the API result."""
+    result = tg_call(token, "sendMessage", {
+        "chat_id": chat_id,
+        "text": status_message(week, cfg),
+        "reply_markup": reply_markup_for(week),
+    })
+    if result.get("ok"):
+        week["message_id"] = result["result"]["message_id"]
+        week["sent_at"] = datetime.now(timezone.utc).isoformat()
+        week["nudge_sent"] = False
+        week["summary_sent"] = False
+    return result

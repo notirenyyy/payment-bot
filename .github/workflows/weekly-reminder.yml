@@ -2,8 +2,15 @@ name: Weekly Payment Reminder
 
 on:
   schedule:
-    - cron: '0 4 * * 0'  # Sunday 4am UTC = 12pm Singapore time (UTC+8)
+    # Sunday 04:02 UTC = 12:02 SGT. Off the top of the hour because GitHub
+    # delays/drops :00 schedules the most. If this still runs late, the
+    # 5-minute poller sends the reminder anyway (and this job then skips).
+    - cron: '2 4 * * 0'
   workflow_dispatch:       # Allow manual trigger from GitHub UI
+
+concurrency:
+  group: payment-bot
+  cancel-in-progress: false
 
 jobs:
   send-reminder:

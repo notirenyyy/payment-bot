@@ -3,6 +3,8 @@
 
 Designed to be run every 5 minutes via GitHub Actions (or locally).
 Each run:
+  0. Sends this week's reminder if it's past Sunday 12:00 SGT and it hasn't
+     gone out yet (GitHub's weekly cron is often hours late or skipped)
   1. Fetches new callback_query updates from Telegram
   2. Marks payers, edits the reminder message in real time
   3. If everyone just paid → posts the all-paid summary
@@ -21,7 +23,9 @@ from lib import (
     mark_paid,
     nudge_message,
     reply_markup_for,
+    reminder_due,
     save_ledger,
+    send_week_reminder,
     status_message,
     tg_call,
     this_sunday,
@@ -47,10 +51,33 @@ def main() -> None:
 
     dirty = False
 
+    # ── 0. Catch-up reminder ─────────────────────────────────────────────────
+    week = get_or_create_week(ledger, this_sunday())
+    if reminder_due(week):
+        res = send_week_reminder(week, cfg, token, chat_id)
+        if res.get("ok"):
+            print(f"📣 Reminder sent for {week['date']} (message_id={week['message_id']})")
+            dirty = True
+        else:
+            print(f"⚠️  Reminder failed: {res.get('description')}")
+
     # ── 1. Fetch new callback updates ────────────────────────────────────────
-    result = tg_call(token, "getUpdates", {"offset": offset, "timeout": 0})
+    result = tg_call(token, "getUpdates", {
+        "offset": offset,
+        "timeout": 0,
+        "allowed_updates": ["callback_query"],
+    })
     if not result.get("ok"):
+        if result.get("error_code") == 409:
+            print("❌ Telegram says another process is reading this bot's updates "
+                  "(a webhook or another getUpdates poller). Button taps will be "
+                  "stolen until it's stopped — see README › Troubleshooting.")
+        # Still save the reminder if we just sent one.
+        if dirty:
+            save_ledger(ledger)
+            write_ledger_md(ledger, cfg)
         sys.exit(f"getUpdates failed: {result}")
+    print(f"Fetched {len(result.get('result', []))} update(s) from offset {offset}.")
 
     updates = result.get("result", [])
     for upd in updates:

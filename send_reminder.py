@@ -3,20 +3,19 @@
 "I've paid" inline keyboard button.
 
 Run modes:
-    python3 send_reminder.py             # send the reminder for the current week
+    python3 send_reminder.py             # send this week's reminder (skips if already sent)
+    python3 send_reminder.py --force     # send again even if already sent this week
     python3 send_reminder.py --dry-run   # print the message without sending
 """
 import sys
-from datetime import datetime, timezone
 
 from lib import (
     get_or_create_week,
     load_config,
     load_ledger,
-    reply_markup_for,
     save_ledger,
+    send_week_reminder,
     status_message,
-    tg_call,
     this_sunday,
     write_ledger_md,
 )
@@ -26,11 +25,11 @@ def main() -> None:
     cfg = load_config()
     ledger = load_ledger()
     dry_run = "--dry-run" in sys.argv
+    force = "--force" in sys.argv
 
     date = this_sunday()
     week = get_or_create_week(ledger, date)
     text = status_message(week, cfg)
-    markup = reply_markup_for(week)
 
     print(f"--- Week {date} ---")
     print(text)
@@ -41,6 +40,11 @@ def main() -> None:
         write_ledger_md(ledger, cfg)
         return
 
+    if week.get("message_id") and not force:
+        # The 5-minute poller may already have sent it as a catch-up.
+        print(f"Reminder for {date} already sent (message_id={week['message_id']}). Use --force to resend.")
+        return
+
     token = cfg.get("bot_token", "")
     chat_id = cfg.get("chat_id", "")
     if not token or token.startswith("PASTE_"):
@@ -48,18 +52,10 @@ def main() -> None:
     if not chat_id or str(chat_id).startswith("PASTE_"):
         sys.exit("chat_id is not set in config.json")
 
-    result = tg_call(token, "sendMessage", {
-        "chat_id": chat_id,
-        "text": text,
-        "reply_markup": markup,
-    })
+    result = send_week_reminder(week, cfg, token, chat_id)
     if not result.get("ok"):
         sys.exit(f"Telegram API error: {result}")
 
-    week["message_id"] = result["result"]["message_id"]
-    week["sent_at"] = datetime.now(timezone.utc).isoformat()
-    week["nudge_sent"] = False
-    week["summary_sent"] = False
     save_ledger(ledger)
     write_ledger_md(ledger, cfg)
     print("Sent! message_id =", week["message_id"])
