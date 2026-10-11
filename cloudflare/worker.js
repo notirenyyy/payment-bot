@@ -5,7 +5,8 @@
  * The Worker:
  *   1. marks them paid in ledger.json in the GitHub repo (one commit)
  *   2. edits the reminder message so ⏳ → ✅ straight away
- *   3. if that was the last person, posts the 🎉 summary + running ledger
+ *   3. if that was the last person, posts the 🎉 summary + running ledger,
+ *      pins the ledger and unpins the previous ledger pin
  *
  * The Sunday reminder and Monday nudge still run on GitHub Actions.
  *
@@ -22,6 +23,7 @@
 
 const LEDGER_PATH = "ledger.json";
 const LEDGER_MD_PATH = "ledger.md";
+const LEDGER_PREFIX = "📒 Ledger update";
 const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
 export default {
@@ -119,7 +121,37 @@ async function handleCallback(cb, env) {
 
   if (outcome.sendSummary && msg.chat) {
     await tg(env, "sendMessage", { chat_id: msg.chat.id, text: allPaidMessage(outcome.week, cfg) });
-    await tg(env, "sendMessage", { chat_id: msg.chat.id, text: ledgerSummaryMessage(outcome.ledger, cfg) });
+    await postAndPinLedger(env, msg.chat.id, outcome.ledger, cfg);
+  }
+}
+
+// ── Pin the newest ledger, unpin the previous one ───────────────────────────
+// Only ever unpins a ledger message, so other pins in the group are untouched.
+// Needs the bot to be a group admin with "Pin messages".
+async function postAndPinLedger(env, chatId, ledger, cfg) {
+  const sent = await tg(env, "sendMessage", { chat_id: chatId, text: ledgerSummaryMessage(ledger, cfg) });
+  if (!sent.ok) { console.log("ledger send failed:", JSON.stringify(sent)); return; }
+  const newId = sent.result.message_id;
+
+  let oldId = ledger.pinned_ledger_message_id;
+  if (!oldId) {
+    const chat = await tg(env, "getChat", { chat_id: chatId });
+    const pinned = (chat.result && chat.result.pinned_message) || {};
+    if (String(pinned.text || "").startsWith(LEDGER_PREFIX)) oldId = pinned.message_id;
+  }
+
+  const pin = await tg(env, "pinChatMessage", { chat_id: chatId, message_id: newId, disable_notification: true });
+  if (!pin.ok) { console.log("pin failed (is the bot an admin with Pin messages?):", JSON.stringify(pin)); return; }
+  if (oldId && oldId !== newId) await tg(env, "unpinChatMessage", { chat_id: chatId, message_id: oldId });
+
+  try {
+    await updateLedger(env, (l) => {
+      if (l.pinned_ledger_message_id === newId) return { changed: false };
+      l.pinned_ledger_message_id = newId;
+      return { changed: true };
+    }, "chore: pin latest ledger [skip ci]", cfg);
+  } catch (err) {
+    console.log("could not save pinned id:", err && err.stack || err);
   }
 }
 

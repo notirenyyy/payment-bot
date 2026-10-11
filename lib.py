@@ -294,3 +294,41 @@ def send_week_reminder(week: dict, cfg: dict, token: str, chat_id: str) -> dict:
         week["nudge_sent"] = False
         week["summary_sent"] = False
     return result
+
+
+# --- Pinned ledger ---
+
+LEDGER_PREFIX = "📒 Ledger update"
+
+
+def post_and_pin_ledger(ledger: dict, cfg: dict, token: str, chat_id: str) -> dict:
+    """Send the running ledger, pin it, and unpin the previous ledger pin.
+
+    Only ever unpins a ledger message (the one we stored, or a pinned message
+    starting with "📒 Ledger update"), so other pins in the group are left alone.
+    Needs the bot to be a group admin with "Pin messages"; if it isn't, the
+    ledger is still posted, just not pinned.
+    """
+    res = tg_call(token, "sendMessage", {"chat_id": chat_id, "text": ledger_summary_message(ledger, cfg)})
+    if not res.get("ok"):
+        return res
+    new_id = res["result"]["message_id"]
+
+    old_id = ledger.get("pinned_ledger_message_id")
+    if not old_id:
+        chat = tg_call(token, "getChat", {"chat_id": chat_id}).get("result") or {}
+        pinned = chat.get("pinned_message") or {}
+        if str(pinned.get("text", "")).startswith(LEDGER_PREFIX):
+            old_id = pinned.get("message_id")
+
+    pin = tg_call(token, "pinChatMessage", {
+        "chat_id": chat_id, "message_id": new_id, "disable_notification": True,
+    })
+    if pin.get("ok"):
+        if old_id and old_id != new_id:
+            tg_call(token, "unpinChatMessage", {"chat_id": chat_id, "message_id": old_id})
+        ledger["pinned_ledger_message_id"] = new_id
+        print(f"📌 Ledger pinned (message_id={new_id}).")
+    else:
+        print(f"⚠️  Could not pin ledger: {pin.get('description')} — make the bot an admin with 'Pin messages'.")
+    return res

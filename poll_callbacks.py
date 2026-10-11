@@ -18,6 +18,7 @@ from lib import (
     all_paid_message,
     get_or_create_week,
     ledger_summary_message,
+    post_and_pin_ledger,
     load_config,
     load_ledger,
     mark_paid,
@@ -148,8 +149,7 @@ def main() -> None:
 
             # Follow up with the running ledger so the group history is always
             # visible in chat.
-            ledger_msg = ledger_summary_message(ledger, cfg)
-            led_res = tg_call(token, "sendMessage", {"chat_id": chat_id, "text": ledger_msg})
+            led_res = post_and_pin_ledger(ledger, cfg, token, chat_id)
             if led_res.get("ok"):
                 print("📒 Ledger summary sent.")
             else:

@@ -4,6 +4,8 @@
 Useful for backfilling a missed ledger update (e.g. when new code was deployed
 after the all-paid summary had already been sent for a given week).
 
+Also pins it and unpins the previous ledger pin.
+
 Usage:
     python3 post_ledger.py            # send the ledger summary now
     python3 post_ledger.py --dry-run  # print without sending
@@ -14,6 +16,8 @@ from lib import (
     ledger_summary_message,
     load_config,
     load_ledger,
+    post_and_pin_ledger,
+    save_ledger,
     tg_call,
 )
 
@@ -39,9 +43,10 @@ def main() -> None:
     if not chat_id or str(chat_id).startswith("PASTE_"):
         sys.exit("chat_id is not set")
 
-    result = tg_call(token, "sendMessage", {"chat_id": chat_id, "text": msg})
+    result = post_and_pin_ledger(ledger, cfg, token, chat_id)
     if not result.get("ok"):
         sys.exit(f"Telegram API error: {result}")
+    save_ledger(ledger)
     print("Sent! message_id =", result["result"]["message_id"])
 
 
