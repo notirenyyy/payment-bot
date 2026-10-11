@@ -43,6 +43,6 @@ Weekly amount: **$10 each** ($40 total)
 | 20 Sep 2026 | ⏳ Pending | — |
 | 27 Sep 2026 | ⏳ Pending | — |
 | 04 Oct 2026 | ⏳ Pending | — |
-| 11 Oct 2026 | ⏳ Pending | — |
+| 11 Oct 2026 | ⚠️ Partial (1/4) | @notirenyyy |
 
-_Last updated: 2026-10-11 16:24 SGT_
+_Last updated: 2026-10-11 16:25 SGT_
