@@ -36,10 +36,11 @@ jobs:
         run: python3 send_reminder.py
 
       - name: Save ledger to repo
-        run: |
-          git config user.name "payment-bot"
-          git config user.email "bot@github-actions"
-          git add ledger.json ledger.md
-          git diff --staged --quiet || git commit -m "chore: reminder sent [skip ci]"
-          git pull --rebase origin main
-          git push
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+          USERNAMES: ${{ secrets.USERNAMES }}
+          AMOUNT_PER_PERSON: ${{ secrets.AMOUNT_PER_PERSON }}
+          AMOUNT_TOTAL: ${{ secrets.AMOUNT_TOTAL }}
+          LEDGER_PATH: ledger.json
+        run: './push_ledger.sh "chore: reminder sent [skip ci]"'

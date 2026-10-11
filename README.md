@@ -7,6 +7,10 @@ A Telegram bot that:
 3. **Mondays at 12:00 SGT** (24h after the reminder), the bot tags anyone who still hasn't paid — but stays quiet if everyone already has.
 4. Keeps a running ledger (`ledger.md`) you can open anytime to see history.
 
+## Instant updates (Cloudflare Worker)
+
+Button taps can be handled instantly by a free Cloudflare Worker instead of waiting for the GitHub poller (which GitHub often runs only every few hours). Setup guide: [`cloudflare/SETUP.md`](cloudflare/SETUP.md). When the Worker is connected, the GitHub poller detects it and only handles the Sunday reminder and Monday nudge.
+
 ## Files
 
 - `send_reminder.py` — posts the Sunday reminder with the inline button
@@ -14,6 +18,8 @@ A Telegram bot that:
 - `nag_unpaid.py` — Monday-noon follow-up that tags anyone still unpaid (skips if everyone's paid)
 - `render_ledger.py` — regenerates `ledger.md` from `ledger.json` (run manually if you hand-edit)
 - `lib.py` — shared helpers
+- `cloudflare/worker.js` — instant tap handler (Telegram webhook → GitHub commit)
+- `merge_ledger.py`, `push_ledger.sh` — let GitHub Actions and the Worker save the ledger at the same time without losing either change
 - `config.json` — bot token, group chat ID, $10 amount, friend handles
 - `ledger.json` — the source of truth: every week's paid list
 - `ledger.md` — auto-generated, human-readable ledger

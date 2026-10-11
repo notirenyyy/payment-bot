@@ -62,11 +62,19 @@ def main() -> None:
             print(f"⚠️  Reminder failed: {res.get('description')}")
 
     # ── 1. Fetch new callback updates ────────────────────────────────────────
-    result = tg_call(token, "getUpdates", {
-        "offset": offset,
-        "timeout": 0,
-        "allowed_updates": ["callback_query"],
-    })
+    # If the Cloudflare Worker webhook is set, taps go there instantly and
+    # Telegram refuses getUpdates — skip straight to reminder/nudge checks.
+    hook = tg_call(token, "getWebhookInfo", {})
+    webhook_url = (hook.get("result") or {}).get("url")
+    if webhook_url:
+        print(f"Webhook mode ({webhook_url}) — taps handled by the Worker.")
+        result = {"ok": True, "result": []}
+    else:
+        result = tg_call(token, "getUpdates", {
+            "offset": offset,
+            "timeout": 0,
+            "allowed_updates": ["callback_query"],
+        })
     if not result.get("ok"):
         if result.get("error_code") == 409:
             print("❌ Telegram says another process is reading this bot's updates "
