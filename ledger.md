@@ -31,18 +31,18 @@ Weekly amount: **$10 each** ($40 total)
 | 28 Jun 2026 | ✅ Full ($40) | @limmxy, @notirenyyy, @mienions_ra, @ilyisabel |
 | 05 Jul 2026 | ✅ Full ($40) | @limmxy, @notirenyyy, @mienions_ra, @ilyisabel |
 | 12 Jul 2026 | ✅ Full ($40) | @limmxy, @notirenyyy, @mienions_ra, @ilyisabel |
-| 19 Jul 2026 | ⏳ Pending | — |
-| 26 Jul 2026 | ⚠️ Partial (2/4) | @ilyisabel, @notirenyyy |
-| 02 Aug 2026 | ⏳ Pending | — |
-| 09 Aug 2026 | ⏳ Pending | — |
-| 16 Aug 2026 | ⏳ Pending | — |
-| 23 Aug 2026 | ⏳ Pending | — |
-| 30 Aug 2026 | ⏳ Pending | — |
-| 06 Sep 2026 | ⏳ Pending | — |
-| 13 Sep 2026 | ⏳ Pending | — |
-| 20 Sep 2026 | ⏳ Pending | — |
-| 27 Sep 2026 | ⏳ Pending | — |
-| 04 Oct 2026 | ⏳ Pending | — |
+| 19 Jul 2026 | ✅ Full ($40) | @limmxy, @notirenyyy, @mienions_ra, @ilyisabel |
+| 26 Jul 2026 | ✅ Full ($40) | @ilyisabel, @notirenyyy, @limmxy, @mienions_ra |
+| 02 Aug 2026 | ✅ Full ($40) | @limmxy, @notirenyyy, @mienions_ra, @ilyisabel |
+| 09 Aug 2026 | ✅ Full ($40) | @limmxy, @notirenyyy, @mienions_ra, @ilyisabel |
+| 16 Aug 2026 | ✅ Full ($40) | @limmxy, @notirenyyy, @mienions_ra, @ilyisabel |
+| 23 Aug 2026 | ✅ Full ($40) | @limmxy, @notirenyyy, @mienions_ra, @ilyisabel |
+| 30 Aug 2026 | ✅ Full ($40) | @limmxy, @notirenyyy, @mienions_ra, @ilyisabel |
+| 06 Sep 2026 | ✅ Full ($40) | @limmxy, @notirenyyy, @mienions_ra, @ilyisabel |
+| 13 Sep 2026 | ✅ Full ($40) | @limmxy, @notirenyyy, @mienions_ra, @ilyisabel |
+| 20 Sep 2026 | ✅ Full ($40) | @limmxy, @notirenyyy, @mienions_ra, @ilyisabel |
+| 27 Sep 2026 | ✅ Full ($40) | @limmxy, @notirenyyy, @mienions_ra, @ilyisabel |
+| 04 Oct 2026 | ✅ Full ($40) | @limmxy, @notirenyyy, @mienions_ra, @ilyisabel |
 | 11 Oct 2026 | ⚠️ Partial (1/4) | @notirenyyy |
 
-_Last updated: 2026-10-11 16:25 SGT_
+_Last updated: 2026-10-11 16:54 SGT_

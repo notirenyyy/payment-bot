@@ -1,4 +1,6 @@
 """Shared helpers for the weekly payment reminder bot."""
+from __future__ import annotations
+
 import json
 import os
 import urllib.parse
