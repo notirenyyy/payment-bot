@@ -527,11 +527,12 @@
       "paid": [
         "@notirenyyy",
         "@ilyisabel",
-        "@limmxy"
+        "@limmxy",
+        "@mienions_ra"
       ],
       "sent_at": "2026-10-18T05:23:18.959543+00:00",
       "nudge_sent": false,
-      "summary_sent": false
+      "summary_sent": true
     }
   ]
 }
