@@ -563,7 +563,9 @@
     {
       "date": "2026-11-08",
       "message_id": 151,
-      "paid": [],
+      "paid": [
+        "@notirenyyy"
+      ],
       "sent_at": "2026-11-08T07:55:28.999349+00:00",
       "nudge_sent": false,
       "summary_sent": false
