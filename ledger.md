@@ -50,4 +50,4 @@ Weekly amount: **$10 each** ($40 total)
 | 08 Nov 2026 | ✅ Full ($40) | @notirenyyy, @ilyisabel, @mienions_ra, @limmxy |
 | 15 Nov 2026 | ⚠️ Partial (3/4) | @notirenyyy, @mienions_ra, @ilyisabel |
 
-_Last updated: 2026-11-15 15:35 SGT_
+_Last updated: 2026-11-16 22:02 SGT_

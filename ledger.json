@@ -582,7 +582,7 @@
         "@ilyisabel"
       ],
       "sent_at": "2026-11-15T07:16:08.340600+00:00",
-      "nudge_sent": false,
+      "nudge_sent": true,
       "summary_sent": false
     }
   ]
